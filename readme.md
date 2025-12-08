@@ -1,4 +1,4 @@
-# SimpleT Salesforce Knowledge Resources
+# SimpleT
 
 This repository contains all the resources, code, and utilities required to set up and manage SimpleT's components. It is designed to help admins, developers, and users quickly deploy and configure the necessary features.
 
