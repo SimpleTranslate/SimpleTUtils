@@ -101,7 +101,7 @@ Copy and paste these files into your Salesforce org via:
 
 ---
 
-### 3. Create a Knowledge trigger
+### 4. Create a Knowledge trigger
 
 1. Go to *Object Manager → Knowledge → Fields & Relationships*  
 2. Create a new trigger  
