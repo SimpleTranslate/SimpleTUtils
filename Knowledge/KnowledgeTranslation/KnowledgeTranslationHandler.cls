@@ -2,6 +2,18 @@
  * Service for translating Knowledge articles using simpleT (Google Translate)
  * Created by nikola on 10.09.2025
  * Refactored for improved readability and performance
+ *
+ * ==================== CONFIGURATION GUIDE ====================
+ * This service automatically translates Knowledge articles to different languages.
+ *
+ * TO CUSTOMIZE WITH YOUR OWN FIELDS:
+ * Edit the getTranslatableFields() method (line ~202)
+ * Add/remove field API names in the returned List
+ *
+ * IMPORTANT: After editing getTranslatableFields(), you MUST also update:
+ * - queryTargetArticles() method (line ~48) - add fields to SELECT clause
+ * - fetchMasterRecords() method (line ~64) - add fields to SELECT clause
+ * =========================================================
  */
 public class KnowledgeTranslationService {
     private static final String TRANSLATION_ENGINE = 'ST Google Translate Default';
@@ -42,10 +54,16 @@ public class KnowledgeTranslationService {
 
     /**
      * Query target knowledge articles that need translation
+     *
+     * CUSTOMIZATION:
+     * Add your custom translatable fields to the SELECT clause below
+     * Example: SELECT Id, KnowledgeArticleId, Language, Summary, Title, Question__c, Answer__c, YourField__c
+     *
+     * IMPORTANT: Make sure field names match exactly what you added in getTranslatableFields()
      */
     private static List<Knowledge__kav> queryTargetArticles(Set<Id> knowledgeIds) {
         return [
-            SELECT Id, KnowledgeArticleId, Language, Summary, Title, Question__c, Answer__c
+            SELECT Id, KnowledgeArticleId, Language, Summary, Title, Question__c
             FROM Knowledge__kav
             WHERE Id IN :knowledgeIds
         ];
@@ -53,6 +71,15 @@ public class KnowledgeTranslationService {
 
     /**
      * Fetch master language records for translation source content
+     *
+     * CUSTOMIZATION:
+     * Add your custom translatable fields to the SELECT clause below
+     * Example: SELECT Id, KnowledgeArticleId, Language, IsMasterLanguage, Summary, Title, Answer__c, Question__c, YourField__c
+     *
+     * IMPORTANT:
+     * 1. Field names must match getTranslatableFields()
+     * 2. This method retrieves the SOURCE language (master) record
+     * 3. The translations will be pulled from these fields
      */
     private static Map<Id, Knowledge__kav> fetchMasterRecords(List<Knowledge__kav> targetArticles) {
         Set<Id> articleIds = new Set<Id>();
@@ -61,7 +88,7 @@ public class KnowledgeTranslationService {
         }
 
         List<Knowledge__kav> masterRecords = [
-            SELECT Id, KnowledgeArticleId, Language, IsMasterLanguage, Summary, Title, Answer__c, Question__c
+            SELECT Id, KnowledgeArticleId, Language, IsMasterLanguage, Summary, Title, Question__c
             FROM Knowledge__kav
             WHERE KnowledgeArticleId IN :articleIds AND IsMasterLanguage = true
         ];
@@ -197,14 +224,32 @@ public class KnowledgeTranslationService {
 
     /**
      * Get list of fields that should be translated
-     * Configure translatable fields here
+     *
+     * CUSTOMIZATION:
+     * 1. Add your custom field API names to the list below
+     * 2. Field names are case-sensitive (e.g., 'Question__c' not 'question__c')
+     * 3. Use API names, not labels
+     * 4. Supported field types: Text, Text Area, Long Text Area, Rich Text Area
+     *
+     * EXAMPLE - Adding 3 new fields:
+     * return new List<String>{
+     *     'Summary',          // Standard field
+     *     'Title',            // Standard field
+     *     'Question__c',      // Custom field
+     *     'Answer__c',        // Your custom field - ADD HERE
+     *     'Description__c',   // Your custom field - ADD HERE
+     *     'Keywords__c',      // Your custom field - ADD HERE
+     * };
+     *
+     * CRITICAL: After adding fields here, you MUST also update:
+     *     1. queryTargetArticles() method (line ~71) - add to SELECT clause
+     *     2. fetchMasterRecords() method (line ~91) - add to SELECT clause
      */
     private static List<String> getTranslatableFields() {
         return new List<String>{
             'Summary',
             'Title',
-            'Question__c',
-            'Answer__c'
+            'Question__c'
         };
     }
 

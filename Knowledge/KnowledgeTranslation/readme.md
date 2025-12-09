@@ -39,12 +39,57 @@ Copy and paste these files into your Salesforce org via:
 
 ---
 
-### 2. Create necessary custom fields on the Knowledge object
+### 2. Customize your KnowledgeTranslationHandler
 
-1. Go to *Object Manager → Knowledge → Fields & Relationships*  
-2. Create a new custom field  
-3. Select **Rich Text Area** as the data type  
-4. Name the field **"Answer"**
+1. IDENTIFY YOUR FIELDS
+   - List all custom fields on Knowledge__kav that you want to translate
+   - Get their API names (e.g., 'MyField__c')
+
+2. UPDATE getTranslatableFields() METHOD
+   ```
+    private static List<String> getTranslatableFields() {
+        return new List<String>{
+            'Summary',
+            'Title',
+            'Question__c'
+        };
+    }
+   ```
+   - Add your field API names to the returned List
+   - Example:
+     return new List<String>{
+         'Summary',
+         'Title',
+         'Question__c',
+         'Answer__c',
+         'MyCustomField__c'    // Add your field here
+     };
+
+3. UPDATE queryTargetArticles() METHOD
+    ```
+    private static List<Knowledge__kav> queryTargetArticles(Set<Id> knowledgeIds) {
+        return [
+            SELECT Id, KnowledgeArticleId, Language, Summary, Title, Question__c
+            FROM Knowledge__kav
+            WHERE Id IN :knowledgeIds
+        ];
+    }
+    ```
+   - Add your field to the SELECT clause
+   - Example:
+     SELECT Id, KnowledgeArticleId, Language, Summary, Title, Question__c, Answer__c, MyCustomField__c
+
+4. UPDATE fetchMasterRecords() METHOD
+   ```
+   List<Knowledge__kav> masterRecords = [
+            SELECT Id, KnowledgeArticleId, Language, IsMasterLanguage, Summary, Title, Question__c
+            FROM Knowledge__kav
+            WHERE KnowledgeArticleId IN :articleIds AND IsMasterLanguage = true
+        ];
+    ```
+   - Add your field to the SELECT clause
+   - Example:
+     SELECT Id, KnowledgeArticleId, Language, IsMasterLanguage, Summary, Title, Answer__c, Question__c, MyCustomField__c
 
 ---
 
