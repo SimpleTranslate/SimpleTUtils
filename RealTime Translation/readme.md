@@ -28,31 +28,34 @@ This is a **Record-Triggered Flow** that automatically translates Case record de
 
 - **SimpleT Package Installed:** This flow requires the SimpleT translation package with the `simpleT__ST_TranslateInvocable` Apex action
 - **Salesforce Org:** Flow is built for Salesforce with Lightning Flow Builder
-- **Permissions:** User executing the flow must have appropriate Case update permissions
+- **Permissions:** User executing the flow must have appropriate Case update permissions and SimpleT permissions (https://www.simpletranslate.io/docs/salesforce/setup/authenticationSalesforce/)
 
 ### SimpleT Configuration
 
 Ensure SimpleT is properly configured:
 
-1. Install the SimpleT package from AppExchange (if not already installed)
-2. Verify the translation engine "ST Google Translate Default" is active in SimpleT settings (In this example we use Google Translate, you can adjust it to other SimpleT supported engines)
-3. Ensure API credentials are configured for the selected translation engine
+1. Install the SimpleT package from AppExchange (if not already installed) (https://www.simpletranslate.io/docs/salesforce/setup/installPackage/)
+2. Verify the translation engine "ST Google Translate Default" is active in SimpleT settings (In this example we use Google Translate, you can adjust it to other SimpleT supported engines) (https://www.simpletranslate.io/docs/setup/translationEngine/default-engines)
+3. Ensure API credentials are setup in salesforce (NamedCredential/External credential) (https://www.simpletranslate.io/docs/salesforce/setup/authenticationSalesforce/)
+4. Ensure credentials are setup for the selected translation engine (https://www.simpletranslate.io/docs/setup/translationEngine)
 
 ---
 
 ## Flow Variables
 
-### Input Variables
-
 | Variable Name | Type | Collection | Purpose |
 |---|---|---|---|
-| `agentLanguage` | String | Yes | Collection of language codes to translate into. In this example it is populated by the flow with: `en`, `de`, `fr`, `it`, `pt` |
-
-### Output Variables
+| `agentLanguage` | String | Yes | Collection of language codes to translate into. In this example it is populated by the flow with: `en_US`, `de`, `fr`, `it`, `pt` |
 
 | Variable Name | Type | Collection | Purpose |
 |---|---|---|---|
 | `translationResults` | Apex (ST_TranslationResponseWrapper) | Yes | Contains translation results from SimpleT API with language codes and translated text |
+
+## Flow Constants
+
+| Constant Name | Type | Value | Purpose |
+|---|---|---|---|
+| `translationEngine` | String | ST Google Translate Default | Specifies which SimpleT translation engine to use for translations |
 
 ---
 
@@ -68,7 +71,7 @@ Ensure SimpleT is properly configured:
 ### 2. **Add language (Assignment)**
 - **Purpose:** Populates the `agentLanguage` collection with supported language codes
 - **Languages Added:**
-  - `en` - English
+  - `en_US` - English
   - `de` - German
   - `fr` - French
   - `it` - Italian
@@ -149,12 +152,22 @@ If you want to simply import the flow from the metadata file skip to "Installati
    - **Available for output**: Yes
 3. Click **Done**
 
+### Create the translationEngine Constant
+
+1. In the toolbox click **New Resource**
+2. Configure:
+   - **Resource Type**: Constant
+   - **Constant Name**: `translationEngine`
+   - **Data Type**: Text
+   - **Value**: `ST Google Translate Default`
+3. Click **Done**
+
 ### Add the "Add language" Assignment Element
 
 1. On the asynchronous path click **+** → **Assignment**
 2. Label: `Add language`
 3. Add these assignment items (click **Add Assignment** for each):
-   - **Assign to**: `agentLanguage` | **Operator**: Add | **Value**: `en`
+   - **Assign to**: `agentLanguage` | **Operator**: Add | **Value**: `en_US`
    - **Assign to**: `agentLanguage` | **Operator**: Add | **Value**: `de`
    - **Assign to**: `agentLanguage` | **Operator**: Add | **Value**: `fr`
    - **Assign to**: `agentLanguage` | **Operator**: Add | **Value**: `it`
@@ -246,7 +259,7 @@ To modify the languages the flow translates into:
 2. Click the "Add language" assignment element
 3. Modify or add language codes in the assignment items
 4. **Common language codes:**
-   - `en` - English
+   - `en_US` - English
    - `de` - German
    - `fr` - French
    - `it` - Italian

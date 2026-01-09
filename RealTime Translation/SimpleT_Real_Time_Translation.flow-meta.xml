@@ -14,13 +14,13 @@
         <inputParameters>
             <name>engine</name>
             <value>
-                <stringValue>ST Google Translate Default</stringValue>
+                <elementReference>translationEngine</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>targetLanguages</name>
             <value>
-                <elementReference>agentLanguage</elementReference>
+                <elementReference>agentLanguages</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -39,40 +39,40 @@
     <apiVersion>65.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
-        <name>Add_language</name>
-        <label>Add language</label>
+        <name>Add_languages</name>
+        <label>Add languages</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>agentLanguage</assignToReference>
+            <assignToReference>agentLanguages</assignToReference>
             <operator>Add</operator>
             <value>
-                <stringValue>en</stringValue>
+                <stringValue>en_US</stringValue>
             </value>
         </assignmentItems>
         <assignmentItems>
-            <assignToReference>agentLanguage</assignToReference>
+            <assignToReference>agentLanguages</assignToReference>
             <operator>Add</operator>
             <value>
                 <stringValue>de</stringValue>
             </value>
         </assignmentItems>
         <assignmentItems>
-            <assignToReference>agentLanguage</assignToReference>
+            <assignToReference>agentLanguages</assignToReference>
             <operator>Add</operator>
             <value>
                 <stringValue>fr</stringValue>
             </value>
         </assignmentItems>
         <assignmentItems>
-            <assignToReference>agentLanguage</assignToReference>
+            <assignToReference>agentLanguages</assignToReference>
             <operator>Add</operator>
             <value>
                 <stringValue>it</stringValue>
             </value>
         </assignmentItems>
         <assignmentItems>
-            <assignToReference>agentLanguage</assignToReference>
+            <assignToReference>agentLanguages</assignToReference>
             <operator>Add</operator>
             <value>
                 <stringValue>pt</stringValue>
@@ -82,6 +82,13 @@
             <targetReference>Translate_Case</targetReference>
         </connector>
     </assignments>
+    <constants>
+        <name>translationEngine</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>ST Google Translate Default</stringValue>
+        </value>
+    </constants>
     <decisions>
         <name>CheckiftranslationisGerman</name>
         <label>Check if translation is German</label>
@@ -163,7 +170,7 @@
         <recordTriggerType>Create</recordTriggerType>
         <scheduledPaths>
             <connector>
-                <targetReference>Add_language</targetReference>
+                <targetReference>Add_languages</targetReference>
             </connector>
             <pathType>AsyncAfterCommit</pathType>
         </scheduledPaths>
@@ -171,7 +178,7 @@
     </start>
     <status>Draft</status>
     <variables>
-        <name>agentLanguage</name>
+        <name>agentLanguages</name>
         <dataType>String</dataType>
         <isCollection>true</isCollection>
         <isInput>true</isInput>
