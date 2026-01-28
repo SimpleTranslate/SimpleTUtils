@@ -35,7 +35,7 @@ This is a **synchronous translation service** that translates text and returns t
 
 | Component | Type | Purpose |
 |-----------|------|---------|
-| **SyncTranslationServiceExample** | Apex Service | Provides methods for synchronous translation with immediate results |
+| **SyncTranslation** | Apex Service | Provides methods for synchronous translation with immediate results |
 
 ---
 

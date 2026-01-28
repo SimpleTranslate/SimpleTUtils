@@ -34,7 +34,7 @@ This is an **asynchronous translation service** that translates a Lead's descrip
 
 | Component | Type | Purpose |
 |-----------|------|---------|
-| **AsyncTranslationQueueableUseCase** | Apex Service | Entry point method for submitting translations |
+| **AsyncTranslation** | Apex Service | Entry point method for submitting translations |
 | **TranslationPollingQueueable** | Apex Queueable | Background job that polls for translation results and updates records |
 
 ---
