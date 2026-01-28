@@ -129,7 +129,6 @@ trigger LeadSyncTranslationTrigger on Lead (before insert, before update) {
 ## Performance Considerations
 
 - **Blocking Execution:** Synchronous translation blocks your code execution while waiting (typically 2-10 seconds)
-- **API Callout Time:** Each translation counts as one API callout; monitor your callout time limits
 - **User Experience:** In Triggers and UI, users may experience delays while translation completes
 - **Governor Limits:** Callout time limits apply (120 seconds max per callout)
 - **Text Size:** For optimal performance, keep translations under 500 characters
@@ -203,8 +202,8 @@ trigger LeadSyncTranslationTrigger on Lead (before insert, before update) {
 - **User Experience:** In UI operations, users must wait for translation
 - **Timeout Risk:** Translation can fail if it exceeds Salesforce's callout timeout (120 seconds)
 - **Text Size:** Maximum ~100,000 characters per translation (varies by engine)
+- **Sync character limit:** We recommend using the sync approach if you have less than 1,000 characters, otherwise we reccomend using the async approach to avoid hitting timeouts and Salesforce limits
 - **Language Support:** Not all language pairs supported; check SimpleT engine documentation
-- **API Limits:** Each translation counts as one callout to translation provider
 
 ---
 

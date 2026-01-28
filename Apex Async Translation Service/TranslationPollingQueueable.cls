@@ -30,7 +30,7 @@ public with sharing class TranslationPollingQueueable implements Queueable, Data
             System.debug(LoggingLevel.INFO, 'TranslationPollingQueueable: Polling job ' + jobId + ', attempt ' + pollAttempt);
 
             // Poll the translation job status
-            List<ST_TranslationWrapper> results = ST_TranslateService.pollTranslationStatus(jobId);
+            List<simpleT.ST_TranslationWrapper> results = simpleT.ST_PollTranslationStatusInvocable.pollTranslationStatus(jobId);
 
             // Check if translation is complete
             if (results != null && !results.isEmpty()) {
@@ -65,14 +65,14 @@ public with sharing class TranslationPollingQueueable implements Queueable, Data
      * Extracts the first translation result and updates the Lead record.
      * @param translations The completed ST_TranslationWrapper objects with populated translations field
      */
-    private void processCompletedTranslations(List<ST_TranslationWrapper> translations) {
+    private void processCompletedTranslations(List<simpleT.ST_TranslationWrapper> translations) {
         try {
             if (translations.isEmpty()) {
                 System.debug(LoggingLevel.WARN, 'TranslationPollingQueueable: No translations returned');
                 return;
             }
 
-            ST_TranslationWrapper translation = translations[0];
+            simpleT.ST_TranslationWrapper translation = translations[0];
 
             if (translation.translations == null || translation.translations.isEmpty()) {
                 System.debug(LoggingLevel.WARN, 'TranslationPollingQueueable: No translation results in wrapper');
@@ -80,7 +80,7 @@ public with sharing class TranslationPollingQueueable implements Queueable, Data
             }
 
             // Extract the first translation result
-            ST_TranslationResponseWrapper translationResult = translation.translations[0];
+            simpleT.ST_TranslationResponseWrapper translationResult = translation.translations[0];
             String translatedText = translationResult.translation;
 
             if (String.isBlank(translatedText)) {

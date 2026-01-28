@@ -69,14 +69,15 @@ Ensure SimpleT is properly configured:
 ### Step 1: Copy Apex Classes to Your Org
 
 1. Go to **Setup → Apex Classes**
-2. Create a new class named `AsyncTranslationQueueableUseCase`
-3. Paste the contents from [AsyncTranslationQueueableUseCase.cls](AsyncTranslationQueueableUseCase.cls)
+2. Create a new class named `AsyncTranslation`
+3. Paste the contents from [AsyncTranslation.cls](AsyncTranslation.cls)
 4. Save the class
 5. Create another class named `TranslationPollingQueueable`
 6. Paste the contents from [TranslationPollingQueueable.cls](TranslationPollingQueueable.cls)
 7. Save the class
+8. Adapt to your orgs needs
 
-**Note:** Do NOT modify `TranslationPollingQueueable.cls` unless you need to change polling behavior.
+**Note:** Do NOT modify `TranslationPollingQueueable.cls` unless you need to change polling behavior for this example.
 
 ---
 
@@ -137,7 +138,6 @@ trigger LeadTranslationTrigger on Lead (after insert) {
 - **Asynchronous Execution:** The translation job runs in the background asynchronously, so it doesn't block your code
 - **Polling Delay:** Queueable polls every 1 minute; expect 2-10 seconds for translation to complete typically and up to a minute for large amounts of data
 - **Max Attempts:** Job retries up to 5 times (5 minute maximum wait) before giving up
-- **API Limits:** Each Lead translation counts as one API call to SimpleT; monitor your API usage
 
 ---
 
@@ -194,9 +194,9 @@ trigger LeadTranslationTrigger on Lead (after insert) {
 
 - **Timing:** Expect 2-10 seconds for translation; maximum 5 minutes (5 polling attempts)
 - **Text Size:** Maximum ~100,000 characters per translation (varies by engine)
+- **Sync character limit:** We recommend using the async approach if you have more than 1,000 characters to avoid hitting timeouts and Salesforce limits
 - **Queueable Limits:** Maximum 50 queueable jobs per transaction
 - **Language Support:** Not all language pairs supported; check SimpleT engine documentation
-- **API Limits:** Each translation counts as one callout to translation provider
 
 ---
 

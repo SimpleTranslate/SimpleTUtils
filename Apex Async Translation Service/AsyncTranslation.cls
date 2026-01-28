@@ -6,7 +6,7 @@
  * Scenario: When a new Lead is created with a description in German, automatically
  * translate it to English and update the Lead's Description field asynchronously.
  */
-public with sharing class AsyncTranslationQueueableUseCase {
+public with sharing class AsyncTranslation {
 
     /**
      * @description Main method that demonstrates the async translation workflow.
@@ -29,7 +29,7 @@ public with sharing class AsyncTranslationQueueableUseCase {
         String targetLanguage
     ) {
         // Step 1: Create a translation wrapper to configure the translation request
-        ST_TranslationWrapper translationWrapper = new ST_TranslationWrapper();
+        simpleT.ST_TranslationWrapper translationWrapper = new simpleT.ST_TranslationWrapper();
 
         // Set the text to translate
         translationWrapper.text = sourceText;
@@ -47,12 +47,12 @@ public with sharing class AsyncTranslationQueueableUseCase {
         translationWrapper.is_async = true;
 
         // Wrap in a list (the service accepts a list of wrappers for batch processing)
-        List<ST_TranslationWrapper> translationWrapperList = new List<ST_TranslationWrapper>{ translationWrapper };
+        List<simpleT.ST_TranslationWrapper> translationWrapperList = new List<simpleT.ST_TranslationWrapper>{ translationWrapper };
 
         try {
             // Step 2: Call the translation service asynchronously
             // This will return immediately with a job ID instead of waiting for translation results
-            List<ST_TranslationWrapper> responseList = ST_TranslateInvocable.stTranslate(translationWrapperList);
+            List<simpleT.ST_TranslationWrapper> responseList = simpleT.ST_TranslateInvocable.stTranslate(translationWrapperList);
 
             // Step 3: Extract the job ID from the response
             // The job ID is used to poll for translation results later
@@ -78,9 +78,11 @@ public with sharing class AsyncTranslationQueueableUseCase {
 
 /**
  * USAGE EXAMPLES:
+ * 
+ * Use this in an Apex Anonymous Execute
  *
  * 1. Simple translation of a single Lead:
- *    AsyncTranslationQueueableUseCase.translateLeadDescriptionAsync(
+ *    AsyncTranslation.translateLeadDescriptionAsync(
  *        '00QQH00000IuzT42AJ',
  *        'Guten Morgen, ich bin interessiert an Ihren Produkten',
  *        'de',

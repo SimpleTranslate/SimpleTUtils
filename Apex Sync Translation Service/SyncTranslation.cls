@@ -6,7 +6,7 @@
  * Scenario: Translate Lead descriptions, account names, or other fields instantly
  * and process the results immediately in your code flow.
  */
-public with sharing class SyncTranslationServiceExample {
+public with sharing class SyncTranslation {
 
     /**
      * @description Translates a single text string synchronously and returns the result.
@@ -24,7 +24,7 @@ public with sharing class SyncTranslationServiceExample {
      */
     public static String translateText(String sourceText, String sourceLanguage, String targetLanguage) {
         // Create a translation wrapper for the request
-        ST_TranslationWrapper wrapper = new ST_TranslationWrapper();
+        simpleT.ST_TranslationWrapper wrapper = new simpleT.ST_TranslationWrapper();
         wrapper.text = sourceText;
         wrapper.sourceLanguage = sourceLanguage;
         wrapper.targetLanguages = new List<String>{ targetLanguage };
@@ -34,12 +34,12 @@ public with sharing class SyncTranslationServiceExample {
         try {
             // Call the translation service synchronously
             // This will wait for the translation to complete before returning
-            List<ST_TranslationWrapper> responseList = ST_TranslateInvocable.stTranslate(
-                new List<ST_TranslationWrapper>{ wrapper }
+            List<simpleT.ST_TranslationWrapper> responseList = simpleT.ST_TranslateInvocable.stTranslate(
+                new List<simpleT.ST_TranslationWrapper>{ wrapper }
             );
 
             if (responseList != null && !responseList.isEmpty()) {
-                ST_TranslationWrapper response = responseList[0];
+                simpleT.ST_TranslationWrapper response = responseList[0];
 
                 // Check if translation was successful
                 if (response.translations != null && !response.translations.isEmpty()) {
@@ -91,17 +91,17 @@ public with sharing class SyncTranslationServiceExample {
  *
  * 1. Simple text translation with immediate result:
  *    String germanText = 'Guten Morgen, ich bin interessiert';
- *    String englishText = SyncTranslationServiceExample.translateText(germanText, 'de', 'en_GB');
+ *    String englishText = SyncTranslation.translateText(germanText, 'de', 'en_GB');
  *    System.debug('Result: ' + englishText);
  *
  * 3. Translate a single Lead description:
  *    Lead myLead = [SELECT Id, Description FROM Lead WHERE Id = :leadId];
- *    Lead translatedLead = SyncTranslationServiceExample.translateLeadDescription(myLead, 'de', 'en_GB');
+ *    Lead translatedLead = SyncTranslation.translateLeadDescription(myLead, 'de', 'en_GB');
  *    update translatedLead;
  *
  * HOW IT WORKS (SYNCHRONOUS):
  * 1. Create an ST_TranslationWrapper with your text and language settings
- * 2. Set is_async = false to enable synchronous mode (this is KEY!)
+ * 2. Set is_async = false to enable synchronous mode
  * 3. Call ST_TranslateInvocable.stTranslate() which WAITS for translation to complete
  * 4. Service blocks execution until translation is finished (typically 2-5 seconds)
  * 5. Immediately returns a list of ST_TranslationWrapper with populated translations field
