@@ -41,7 +41,7 @@ This is an **asynchronous translation service** that translates a Lead's descrip
 
 ## How It Works
 
-1. **Submit Request:** Call `AsyncTranslationQueueableUseCase.translateLeadDescriptionAsync()` with Lead ID, text, source language, and target language
+1. **Submit Request:** Call `AsyncTranslation.translateLeadDescriptionAsync()` with Lead ID, text, source language, and target language
 2. **Create Wrapper:** Service creates an `ST_TranslationWrapper` with async mode enabled
 3. **Get Job ID:** Calls `ST_TranslateInvocable.stTranslate()` which returns immediately with a job ID
 4. **Enqueue Polling:** Submits `TranslationPollingQueueable` to poll for results

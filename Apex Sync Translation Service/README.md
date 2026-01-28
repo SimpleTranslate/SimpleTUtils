@@ -2,7 +2,7 @@
 
 This repository contains the Apex service used to set up SimpleT's synchronous translation in Salesforce. It translates text immediately and returns results in the same execution, without background jobs.
 
-**Service Name:** SyncTranslationServiceExample
+**Service Name:** SyncTranslation
 **Type:** Apex Service (Synchronous)
 **Use Case:** Translate text and get immediate results
 **Execution:** Synchronous (blocking)
@@ -68,8 +68,8 @@ Ensure SimpleT is properly configured:
 ### Step 1: Copy Apex Class to Your Org
 
 1. Go to **Setup → Apex Classes**
-2. Create a new class named `SyncTranslationServiceExample`
-3. Paste the contents from [SyncTranslationServiceExample.cls](SyncTranslationServiceExample.cls)
+2. Create a new class named `SyncTranslation`
+3. Paste the contents from [SyncTranslation.cls](SyncTranslation.cls)
 4. Save the class
 
 ---
@@ -82,7 +82,7 @@ Create a simple Apex script to test:
 // Execute this in Anonymous Apex (Setup → Developer Console → Debug → Open Execute Anonymous)
 
 String germanText = 'Guten Morgen, ich bin interessiert';
-String englishText = SyncTranslationServiceExample.translateText(germanText, 'de', 'en_GB');
+String englishText = SyncTranslation.translateText(germanText, 'de', 'en_GB');
 System.debug('Original: ' + germanText);
 System.debug('Translated: ' + englishText);
 ```
@@ -110,7 +110,7 @@ trigger LeadSyncTranslationTrigger on Lead (before insert, before update) {
     for (Lead lead : Trigger.new) {
 
         // Translate from German to English synchronously
-        Lead translatedLead = SyncTranslationServiceExample.translateLeadDescription(
+        Lead translatedLead = SyncTranslation.translateLeadDescription(
             lead,
             'de',           // Source: German
             'en_GB'         // Target: English (UK)
