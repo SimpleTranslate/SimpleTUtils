@@ -30,6 +30,7 @@ public with sharing class TranslationPollingQueueable implements Queueable, Data
             System.debug(LoggingLevel.INFO, 'TranslationPollingQueueable: Polling job ' + jobId + ', attempt ' + pollAttempt);
 
             // Poll the translation job status
+            List<String> jobIds = new List<String> {jobId};
             List<simpleT.ST_TranslationWrapper> results = simpleT.ST_PollTranslationStatusInvocable.pollTranslationStatus(jobId);
 
             // Check if translation is complete
