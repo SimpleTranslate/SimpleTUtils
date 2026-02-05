@@ -31,7 +31,7 @@ public with sharing class TranslationPollingQueueable implements Queueable, Data
 
             // Poll the translation job status
             List<String> jobIds = new List<String> {jobId};
-            List<simpleT.ST_TranslationWrapper> results = simpleT.ST_PollTranslationStatusInvocable.pollTranslationStatus(jobId);
+            List<simpleT.ST_TranslationWrapper> results = simpleT.ST_PollTranslationStatusInvocable.pollTranslationStatus(jobIds);
 
             // Check if translation is complete
             if (results != null && !results.isEmpty()) {
